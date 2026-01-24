@@ -8,3 +8,5 @@ presets/
 captures/
 .env
 .venv
+build/
+dist/
