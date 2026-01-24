@@ -2,7 +2,7 @@
 
 An unofficial, open-source Python controller and preset manager for the **BOSS IR-2 Amp & Cabinet** pedal.
 
-![GUI Screenshot](docs/gui_preview.png)
+![GUI Screenshot](docs/gui.PNG)
 
 ## Features
 
