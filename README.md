@@ -33,7 +33,6 @@ An unofficial, open-source Python controller and preset manager for the **BOSS I
 ## Project Structure
 
 - `src/`: Main application code (GUI and Control Logic).
-- `reverse_engineering/`: Jupyter notebooks used to decipher the SysEx protocol.
 - `docs/`: Documentation and screenshots.
 
 ## Requirements
