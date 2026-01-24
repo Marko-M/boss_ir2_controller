@@ -10,3 +10,4 @@ captures/
 .venv
 build/
 dist/
+reverse_engineering/
