@@ -65,10 +65,6 @@ This software is provided on an **"AS-IS" basis without any warranties, express 
 - Incompatibility issues
 - Device malfunction or permanent damage
 
-### Intellectual Property
-
-The BOSS IR-2 device hardware, firmware, SysEx protocol specification, and all related documentation are proprietary to Roland Corporation. This project was developed through reverse engineering for educational and interoperability purposes only.
-
 ### License
 
 This software is released under the **MIT License** (see LICENSE file). However, the MIT License applies only to the original source code created by contributors. It does not grant any rights to Roland Corporation's intellectual property.
