@@ -1,0 +1,10 @@
+
+__pycache__/
+.ipynb_checkpoints/
+.vscode/
+presets/
+*.json
+!parameter_map.json
+captures/
+.env
+.venv
