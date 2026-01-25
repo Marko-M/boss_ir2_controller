@@ -12,12 +12,27 @@ An unofficial, open-source Python controller and preset manager for the **BOSS I
 - 🔄 **Bidirectional Sync**: Read the current state from the pedal to the GUI.
 - 🖥️ **Modern GUI**: Dark mode interface with rotary knobs (using `customtkinter` & `tkdial`).
 
-## Installation
+## Quick Start
+
+### 🚀 Pre-compiled Executable (Easiest)
+
+**Download the standalone EXE from [Releases](https://github.com/Gdadamo/boss_ir2_controller/releases)** - No Python installation needed!
+
+1. Download `BOSS_IR2_Controller.exe` from the latest release
+2. Run it directly
+3. Connect your BOSS IR-2 via USB
+4. Start controlling!
+
+### 📦 From Source
 
 1. **Install Python 3.10+**
 2. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
+   ```
+3. **Run**:
+   ```bash
+   python run.py
    ```
 
 ## Usage
