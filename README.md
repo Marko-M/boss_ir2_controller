@@ -14,6 +14,19 @@ An unofficial, open-source Python controller and preset manager for the **BOSS I
 
 ## Installation
 
+## Quick Start
+
+### 🚀 Pre-compiled Executable (Easiest)
+
+**Download the standalone EXE from [Releases](https://github.com/Gdadamo/boss_ir2_controller/releases)** - No Python installation needed!
+
+1. Download `BOSS_IR2_Controller.exe` from the latest release
+2. Connect your BOSS IR-2 via USB
+3. Run it directly
+4. Start controlling!
+
+## From Source
+
 1. **Install Python 3.10+**
 2. **Install dependencies**:
    ```bash
