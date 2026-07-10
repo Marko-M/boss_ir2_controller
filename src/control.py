@@ -2,7 +2,6 @@
 BOSS IR-2 Control Library
 """
 import mido
-import time
 
 # Protocol constants
 ROLAND_ID = 0x41
@@ -23,20 +22,21 @@ PARAMETERS = {
     "TREBLE":   {"addr": [0x20, 0x00, 0x00, 0x02], "type": "range", "min": 0, "max": 127},
     "GAIN":     {"addr": [0x20, 0x00, 0x00, 0x04], "type": "range", "min": 0, "max": 127},
     "AMBIENCE": {"addr": [0x20, 0x00, 0x00, 0x05], "type": "range", "min": 0, "max": 127},
-    "LEVEL":    {"addr": [0x20, 0x00, 0x00, 0x03], "type": "range", "min": 0, "max": 127}, # Correct!
-    
+    "LEVEL":    {"addr": [0x20, 0x00, 0x00, 0x03], "type": "range", "min": 0, "max": 127},  # Correct!
+
     # Discrete parameter
     "MODEL":    {"addr": [0x20, 0x00, 0x00, 0x06], "type": "enum", "values": [
-        "CLEAN", "TWIN", "TWEED", "DIAMOND", "CRUNCH", 
+        "CLEAN", "TWIN", "TWEED", "DIAMOND", "CRUNCH",
         "BRIT", "HI-GAIN", "SLDN", "BROWN", "MODDED", "RFIER"
     ]}
 }
+
 
 class BossIR2:
     def __init__(self, port_name=None):
         self.input_name = port_name
         self.output_name = port_name
-        
+
         # Auto-detect if not specified
         if not port_name:
             for name in mido.get_input_names():
@@ -47,37 +47,37 @@ class BossIR2:
                 if 'BOSS' in name.upper() or 'IR-2' in name.upper():
                     self.output_name = name
                     break
-        
+
         if not self.input_name or not self.output_name:
             raise Exception("BOSS IR-2 not found!")
-            
+
         print(f"🎸 BOSS IR-2 connected on: {self.input_name}")
 
     def _checksum(self, data):
         return (128 - (sum(data) % 128)) & 0x7F
 
     def send_sysex(self, addr, value):
-        """Send DT1 command (Write)"""
+        """Send DT1 command (Write)."""
         # Header: F0 41 10 01 05 09 12
         msg = [0x41, 0x10, 0x01, 0x05, 0x09, 0x12]
-        
+
         # Address + Value
         payload = addr + [value]
         msg.extend(payload)
-        
+
         # Checksum
         msg.append(self._checksum(payload))
-        
+
         # Send
         with mido.open_output(self.output_name) as out:
             out.send(mido.Message('sysex', data=msg))
-            
+
     def set_param(self, name, value):
         if name not in PARAMETERS:
             raise ValueError(f"Unknown parameter '{name}'")
-            
+
         info = PARAMETERS[name]
-        
+
         # Enum handling (MODEL)
         if info['type'] == 'enum':
             if isinstance(value, str):
@@ -92,7 +92,7 @@ class BossIR2:
             val_int = int(value)
             if not (info['min'] <= val_int <= info['max']):
                 raise ValueError(f"Value {val_int} out of range for {name} ({info['min']}-{info['max']})")
-                
+
         print(f"🎛️ SET {name} -> {value} ({val_int})")
         self.send_sysex(info['addr'], val_int)
 
