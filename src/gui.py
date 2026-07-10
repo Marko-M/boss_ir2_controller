@@ -3,10 +3,10 @@ import os
 import json
 from datetime import datetime
 from tkinter import filedialog
-from tkdial import Dial  # <--- Nuovo widget!
+from tkdial import Dial  # <--- New widget!
 from .tool import BossIR2Manager, PARAMETERS
 
-# Configurazione estetica
+# Appearance configuration
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
 
@@ -16,10 +16,10 @@ class BossIR2App(ctk.CTk):
 
         # Setup GUI Window
         self.title("BOSS IR-2 Control Center")
-        self.geometry("900x750") # Aumentata altezza per vedere tutto
-        self.resizable(True, True) # Abilitato resize se serve
+        self.geometry("900x750") # Increased height to show everything
+        self.resizable(True, True) # Enable resizing if needed
 
-        # Inizializza Manager (Backend)
+        # Initialize Manager (Backend)
         self.manager = None
         self.connected = False
         
@@ -43,7 +43,7 @@ class BossIR2App(ctk.CTk):
         # ================= CONTROLS AREA =================
         self.controls_frame = ctk.CTkFrame(self)
         self.controls_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=20)
-        self.controls_frame.grid_columnconfigure((0,1,2), weight=1) # Center cols
+        self.controls_frame.grid_columnconfigure((0,1,2), weight=1) # Center columns
         
         # --- AMP MODEL SELECTION ---
         self.lbl_model = ctk.CTkLabel(self.controls_frame, text="AMP TYPE", font=("Arial", 16, "bold"))
@@ -105,8 +105,8 @@ class BossIR2App(ctk.CTk):
         
         # Dial Widget
         # radius=35 means 70px size (smaller to fit better)
-        # Nota: Questa versione di tkdial non supporta start_angle custom nel costruttore Dial.
-        # Usiamo il default che è comunque ottimizzato per manopole.
+        # Note: This version of tkdial does not support a custom start_angle in the Dial constructor.
+        # We use the default, which is still optimized for knobs.
         dial = Dial(frame, radius=35, start=0, end=127,
                     color_gradient=(color, color),
                     text_color="white",
@@ -135,15 +135,15 @@ class BossIR2App(ctk.CTk):
             self.manager.set_param("MODEL", value)
 
     def on_knob_change(self, param, dial, label):
-        # Evita crash in init se il dizionario non è ancora popolato
+        # Avoid crashing during init if the dictionary is not populated yet
         if param not in self.knobs:
             return
 
         val_int = int(dial.get())
         label.configure(text=str(val_int))
         
-        # Rate limiting semplice: invia solo se cambiato
-        # (tkdial chiama il command molto spesso durante il drag)
+        # Simple rate limiting: send only if changed
+        # (tkdial calls the command very often during dragging)
         prev = self.knobs[param]["last_sent"]
         if val_int != prev:
             self.knobs[param]["last_sent"] = val_int
@@ -185,11 +185,11 @@ class BossIR2App(ctk.CTk):
                 info["label"].configure(text=str(val))
                 info["last_sent"] = val
             else:
-                # Se la chiave manca nel preset, non crashare (mantieni valore attuale o set a 0)
+                # If the key is missing from the preset, do not crash (keep the current value or set it to 0)
                 print(f"⚠️ Warning: Missing key {name} in preset") # Update state to avoid resending
         
     def save_preset_file(self):
-        # Usa un dialog esplicito per chiedere il nome - infallibile!
+        # Use an explicit dialog to ask for the name - reliable!
         dialog = ctk.CTkInputDialog(text="Enter Preset Name:", title="Save Preset")
         name = dialog.get_input()
         
