@@ -191,7 +191,7 @@ class BossIR2App(ctk.CTk):
         try:
             self.manager = BossIR2Manager()
             self.connected = True
-            self.lbl_status.configure(text="● CONNECTED", text_color="#2ecc71")
+            self.lbl_status.configure(text="● Connected", text_color="#2ecc71")
 
             # One startup sync gives the UI an accurate initial state without requiring auto-sync.
             self.after(300, lambda: self._request_sync(manual=False, reason="startup"))
@@ -344,7 +344,7 @@ class BossIR2App(ctk.CTk):
             if manual:
                 self.lbl_status.configure(text="✓ Synced", text_color="#2ecc71")
             elif reason == "startup":
-                self.lbl_status.configure(text="✓ Connected + synced", text_color="#2ecc71")
+                self.lbl_status.configure(text="✓ Connected + Synced", text_color="#2ecc71")
             else:
                 self.lbl_status.configure(text="✓ Auto-synced", text_color="#2ecc71")
         finally:
