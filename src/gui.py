@@ -113,6 +113,8 @@ class BossIR2App(ctk.CTk):
             command=self.sync_from_pedal,
             fg_color="#e67e22",
             hover_color="#d35400",
+            text_color="white",
+            text_color_disabled="white",
             width=160,
             height=40,
             font=("Arial", 12, "bold")
@@ -312,6 +314,8 @@ class BossIR2App(ctk.CTk):
         if manual:
             self.btn_sync.configure(text="Reading... (Wait)", state="disabled")
             self.lbl_status.configure(text="↻ Reading from pedal...", text_color="#f1c40f")
+        elif reason == "auto":
+            self.btn_sync.configure(text="AUTO-SYNCING...", state="disabled")
         else:
             self.btn_sync.configure(state="disabled")
 
