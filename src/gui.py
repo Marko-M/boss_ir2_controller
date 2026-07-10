@@ -206,7 +206,10 @@ class BossIR2App(ctk.CTk):
             # Try one soon, but the normal dirty/sync guards still apply.
             self.after(250, lambda: self._request_sync(manual=False, reason="auto"))
         else:
-            self.lbl_status.configure(text="● Auto-sync off", text_color="#2ecc71" if self.connected else "gray")
+            if self.connected:
+                self.lbl_status.configure(text="● Connected", text_color="#2ecc71")
+            else:
+                self.lbl_status.configure(text="● Not connected", text_color="gray")
 
     def _auto_sync_tick(self):
         if self.closed:
@@ -346,7 +349,12 @@ class BossIR2App(ctk.CTk):
             elif reason == "startup":
                 self.lbl_status.configure(text="✓ Connected + Synced", text_color="#2ecc71")
             else:
-                self.lbl_status.configure(text="✓ Auto-synced", text_color="#2ecc71")
+                # If auto-sync was disabled while this sync was still running,
+                # do not leave the status stuck on "Auto-synced".
+                if self.auto_sync_enabled.get():
+                    self.lbl_status.configure(text="✓ Auto-synced", text_color="#2ecc71")
+                elif self.connected:
+                    self.lbl_status.configure(text="● Connected", text_color="#2ecc71")
         finally:
             self.sync_in_progress = False
             self.btn_sync.configure(text="🔄 SYNC FROM PEDAL", state="normal")
