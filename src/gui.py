@@ -59,11 +59,12 @@ class BossIR2App(ctk.CTk):
 
         self.lbl_status = ctk.CTkLabel(
             self.header_frame,
-            text="⚫ Connecting...",
+            text="● Connecting...",
             text_color="gray",
-            font=("Arial", 14)
+            font=("Arial", 14),
+            height=36
         )
-        self.lbl_status.pack(side="right", padx=25)
+        self.lbl_status.pack(side="right", padx=25, pady=15)
 
         # ================= CONTROLS AREA =================
         self.controls_frame = ctk.CTkFrame(self)
@@ -190,22 +191,22 @@ class BossIR2App(ctk.CTk):
         try:
             self.manager = BossIR2Manager()
             self.connected = True
-            self.lbl_status.configure(text="🟢 CONNECTED", text_color="#2ecc71")
+            self.lbl_status.configure(text="● CONNECTED", text_color="#2ecc71")
 
             # One startup sync gives the UI an accurate initial state without requiring auto-sync.
             self.after(300, lambda: self._request_sync(manual=False, reason="startup"))
         except Exception as e:
             error_msg = str(e)
             self.connected = False
-            self.lbl_status.configure(text=f"🔴 {error_msg}", text_color="#e74c3c")
+            self.lbl_status.configure(text=f"● {error_msg}", text_color="#e74c3c")
 
     def on_auto_sync_toggle(self):
         if self.auto_sync_enabled.get():
-            self.lbl_status.configure(text="🟡 Auto-sync enabled", text_color="#f1c40f")
+            self.lbl_status.configure(text="● Auto-sync enabled", text_color="#f1c40f")
             # Try one soon, but the normal dirty/sync guards still apply.
             self.after(250, lambda: self._request_sync(manual=False, reason="auto"))
         else:
-            self.lbl_status.configure(text="🟢 Auto-sync off", text_color="#2ecc71" if self.connected else "gray")
+            self.lbl_status.configure(text="● Auto-sync off", text_color="#2ecc71" if self.connected else "gray")
 
     def _auto_sync_tick(self):
         if self.closed:
@@ -289,12 +290,12 @@ class BossIR2App(ctk.CTk):
 
         if self.sync_in_progress:
             if manual:
-                self.lbl_status.configure(text="🟡 Sync already running", text_color="#f1c40f")
+                self.lbl_status.configure(text="● Sync already running", text_color="#f1c40f")
             return False
 
         if self.sending_preset:
             if manual:
-                self.lbl_status.configure(text="🟡 Preset send in progress", text_color="#f1c40f")
+                self.lbl_status.configure(text="● Preset send in progress", text_color="#f1c40f")
             return False
 
         # Auto-sync is deliberately conservative. It will not read from the pedal while
@@ -307,7 +308,7 @@ class BossIR2App(ctk.CTk):
 
         if manual:
             self.btn_sync.configure(text="Reading... (Wait)", state="disabled")
-            self.lbl_status.configure(text="🔄 Reading from pedal...", text_color="#f1c40f")
+            self.lbl_status.configure(text="↻ Reading from pedal...", text_color="#f1c40f")
         else:
             self.btn_sync.configure(state="disabled")
 
@@ -341,11 +342,11 @@ class BossIR2App(ctk.CTk):
             self.clear_local_dirty()
 
             if manual:
-                self.lbl_status.configure(text="🟢 Synced", text_color="#2ecc71")
+                self.lbl_status.configure(text="✓ Synced", text_color="#2ecc71")
             elif reason == "startup":
-                self.lbl_status.configure(text="🟢 Connected + synced", text_color="#2ecc71")
+                self.lbl_status.configure(text="✓ Connected + synced", text_color="#2ecc71")
             else:
-                self.lbl_status.configure(text="🟢 Auto-synced", text_color="#2ecc71")
+                self.lbl_status.configure(text="✓ Auto-synced", text_color="#2ecc71")
         finally:
             self.sync_in_progress = False
             self.btn_sync.configure(text="🔄 SYNC FROM PEDAL", state="normal")
@@ -356,9 +357,9 @@ class BossIR2App(ctk.CTk):
         self.btn_sync.configure(text="🔄 SYNC FROM PEDAL", state="normal")
 
         if manual:
-            self.lbl_status.configure(text="🔴 Sync Error", text_color="#e74c3c")
+            self.lbl_status.configure(text="● Sync Error", text_color="#e74c3c")
         elif self.connected:
-            self.lbl_status.configure(text="🟡 Auto-sync failed", text_color="#f1c40f")
+            self.lbl_status.configure(text="● Auto-sync failed", text_color="#f1c40f")
 
     def _apply_preset_to_ui(self, preset):
         data = preset["data"]
@@ -411,7 +412,7 @@ class BossIR2App(ctk.CTk):
         with open(filename, 'w') as f:
             json.dump(preset_data, f, indent=2)
 
-        self.lbl_status.configure(text=f"💾 Saved {name}", text_color="white")
+        self.lbl_status.configure(text=f"✓ Saved {name}", text_color="white")
 
     def load_preset_file(self):
         filepath = filedialog.askopenfilename(initialdir="presets", filetypes=[("JSON Files", "*.json")])
@@ -428,7 +429,7 @@ class BossIR2App(ctk.CTk):
             # Send to pedal.
             self.sending_preset = True
             self.btn_load.configure(state="disabled")
-            self.lbl_status.configure(text="📤 Sending...", text_color="yellow")
+            self.lbl_status.configure(text="→ Sending...", text_color="yellow")
             # Update UI to prevent blocking, then send.
             self.after(100, lambda: self._send_loaded_preset(preset))
 
@@ -437,10 +438,10 @@ class BossIR2App(ctk.CTk):
             for name, val in preset["data"].items():
                 self.manager.set_param(name, val)
                 time.sleep(0.05)
-            self.lbl_status.configure(text="✅ Loaded", text_color="#2ecc71")
+            self.lbl_status.configure(text="✓ Loaded", text_color="#2ecc71")
         except Exception as e:
             print(f"Load error: {e}")
-            self.lbl_status.configure(text="🔴 Load Error", text_color="#e74c3c")
+            self.lbl_status.configure(text="● Load Error", text_color="#e74c3c")
         finally:
             self.sending_preset = False
             self.btn_load.configure(state="normal")
